@@ -11,7 +11,7 @@ import dashboardRoutes from "./routes/dashboardRoutes.js";
 const app = express();
 
 app.use(cors({
-    origin: "*"
+    origin: ["https://queue-brd.netlify.app/]
 }));
 
 app.use(express.json());
