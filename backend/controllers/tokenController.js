@@ -1,7 +1,6 @@
 import Queue from "../models/Queue.js";
 import Token from "../models/Token.js";
 
-// Add Person / Generate Token
 export const addToken = async (req, res) => {
   try {
     const { customerName } = req.body;
@@ -48,7 +47,6 @@ export const addToken = async (req, res) => {
   }
 };
 
-// Get Queue Tokens
 export const getTokens = async (req, res) => {
   try {
     const tokens = await Token.find({
@@ -65,7 +63,6 @@ export const getTokens = async (req, res) => {
   }
 };
 
-// Move Token Up
 export const moveTokenUp = async (req, res) => {
   try {
     const token = await Token.findById(req.params.id);
@@ -106,7 +103,6 @@ export const moveTokenUp = async (req, res) => {
   }
 };
 
-// Move Token Down
 export const moveTokenDown = async (req, res) => {
   try {
     const token = await Token.findById(req.params.id);
@@ -143,7 +139,6 @@ export const moveTokenDown = async (req, res) => {
   }
 };
 
-// Serve Next Token
 export const serveToken = async (req, res) => {
   try {
     const token = await Token.findById(req.params.id);
@@ -159,7 +154,6 @@ export const serveToken = async (req, res) => {
 
     await token.save();
 
-    // Reorder remaining waiting tokens
     const waitingTokens = await Token.find({
       queue: token.queue,
       status: "waiting",
@@ -180,7 +174,6 @@ export const serveToken = async (req, res) => {
   }
 };
 
-// Complete Service
 export const completeToken = async (req, res) => {
   try {
     const token = await Token.findById(req.params.id);
@@ -204,7 +197,6 @@ export const completeToken = async (req, res) => {
   }
 };
 
-// Cancel Token
 export const cancelToken = async (req, res) => {
   try {
     const token = await Token.findById(req.params.id);
@@ -219,7 +211,6 @@ export const cancelToken = async (req, res) => {
 
     await token.save();
 
-    // Reorder waiting tokens
     const waitingTokens = await Token.find({
       queue: token.queue,
       status: "waiting",

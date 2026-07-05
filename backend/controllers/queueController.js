@@ -1,23 +1,39 @@
 import Queue from "../models/Queue.js";
 import Token from "../models/Token.js";
 
-// Create Queue
 export const createQueue = async (req, res) => {
   try {
-    const queue = await Queue.create({
-      name: req.body.name,
+    const { name } = req.body;
+
+    const existingQueue = await Queue.findOne({
+      name: name.trim(),
       manager: req.user._id,
     });
 
-    res.status(201).json(queue);
+    if (existingQueue) {
+      return res.status(409).json({
+        success: false,
+        message: "A queue with this name already exists.",
+      });
+    }
+
+    const queue = await Queue.create({
+      name: name.trim(),
+      manager: req.user._id,
+    });
+
+    res.status(201).json({
+      success: true,
+      data: queue,
+    });
   } catch (error) {
     res.status(500).json({
+      success: false,
       message: error.message,
     });
   }
 };
 
-// Get All Queues
 export const getQueues = async (req, res) => {
   try {
     const queues = await Queue.find({
@@ -48,7 +64,6 @@ export const getQueues = async (req, res) => {
   }
 };
 
-// Get Queue By Id
 export const getQueue = async (req, res) => {
   try {
     const queue = await Queue.findOne({
@@ -70,7 +85,6 @@ export const getQueue = async (req, res) => {
   }
 };
 
-// Update Queue
 export const updateQueue = async (req, res) => {
   try {
     const queue = await Queue.findOneAndUpdate(
@@ -100,7 +114,6 @@ export const updateQueue = async (req, res) => {
   }
 };
 
-// Delete Queue
 export const deleteQueue = async (req, res) => {
   try {
     const queue = await Queue.findOne({
